@@ -2,7 +2,7 @@
 
 In an effort to migrate away from Cold Fusion we are documenting the current processes.
 
-The Cold Fusion scripts are located on abish at `smb://abish/inetpub`
+The Cold Fusion scripts are located on abish at `//abish/inetpub/wwwroot/library/new-books` `smb://abish/inetpub/wwwroot/library/new-books`
 
 <h2 id="actions">Daily Actions/Triggers</h2>
 
@@ -71,3 +71,9 @@ Here is the flow for this script.
     - Configures and sends an alert email to acquisitions using mailerService.
 8. Appends a completion message to the output.
 9. Renders the output as HTML using `variables.fw.renderData("html", output)`.
+
+## [INB](#actions) - Imports new books
+
+Here is the flow for this script.
+
+_COMING SOON_
