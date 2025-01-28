@@ -43,3 +43,31 @@ Here is the flow for this script.
 12. Deletes the book from the acmail table using variables.acmailService.deleteNewBook(book.item_no, book.bib_no).
 13. Appends a completion message to the output.
 14. Renders the output as HTML using variables.fw.renderData("html", output).
+
+## [ACQ Mail(1)](#actions) - Send email to requestors
+
+Here is the flow for this script.
+
+1. Initializes an output string with a message indicating the start of the process.
+2. Retrieves all pending books using `variables.acmailService.processPendingAcmail()`.
+3. Initializes an empty structure booksByLibrarian to group books by librarian.
+4. Iterates over each pending book:
+    - Checks if the librarian's email alias exists in booksByLibrarian. If not, initializes an array for that alias.
+    - Retrieves item details using `variables.acmailService.findItem(book.item_no)`.
+    - Appends the item to the array corresponding to the librarian's email alias.
+5. Initializes an empty string all_book_tables to store the summary table for the alert email.
+6. Iterates over each librarian in booksByLibrarian:
+    - Retrieves librarian details using `variables.acmailService.getLibrarian(trim(key))`.
+    - Generates a book table view for the librarian using `variables.fw.view('acmail/book_table', {"items": "#booksByLibrarian[key]#"})`.
+    - Generates an email body view for the librarian using `variables.fw.view('acmail/notification', {"book_table": book_table, "librarian": "#librarian#"})`.
+    - Configures and sends an email to the librarian using mailerService.
+    - Appends a message to the output indicating the email was sent.
+    - Adds the current book table to the summary book table all_book_tables.
+    - Iterates over each book in the librarian's array:
+        - Appends the book's processed status to the output.
+        - Deletes the book from the pending list using `variables.acmailService.deletePendingBook(book["item##"], book["bib##"])`.
+7. Checks if all_book_tables contains content (length > 10):
+    - Generates an alert email body view using `variables.fw.view('acmail/alert', {"all_book_tables": all_book_tables})`.
+    - Configures and sends an alert email to acquisitions using mailerService.
+8. Appends a completion message to the output.
+9. Renders the output as HTML using `variables.fw.renderData("html", output)`.
